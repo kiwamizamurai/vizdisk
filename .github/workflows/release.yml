@@ -1,0 +1,149 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., v1.0.0)'
+        required: true
+        default: 'v1.0.0'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        platform:
+          - os: ubuntu-latest
+            name: linux
+            extension: ""
+          - os: macos-latest
+            name: darwin
+            extension: ".app"
+    
+    runs-on: ${{ matrix.platform.os }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.22'
+        
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        
+    - name: Install dependencies (Linux)
+      if: matrix.platform.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get update
+        # Add Ubuntu 22.04 (Jammy) repository for libwebkit2gtk-4.0-dev
+        echo "deb http://archive.ubuntu.com/ubuntu jammy main" | sudo tee -a /etc/apt/sources.list
+        sudo apt-get update
+        sudo apt-get install -y build-essential pkg-config libgtk-3-dev libwebkit2gtk-4.0-dev librsvg2-dev
+        
+    - name: Install dependencies (macOS)
+      if: matrix.platform.os == 'macos-latest'
+      run: |
+        brew install librsvg
+        
+    - name: Install Wails
+      run: go install github.com/wailsapp/wails/v2/cmd/wails@v2.10.2
+      
+    - name: Generate icons (macOS)
+      if: matrix.platform.os == 'macos-latest'
+      run: |
+        chmod +x ./scripts/generate-icons.sh
+        ./scripts/generate-icons.sh
+        
+    - name: Generate icons (Linux)
+      if: matrix.platform.os == 'ubuntu-latest'
+      run: |
+        # Install ImageMagick for icon conversion
+        sudo apt-get install -y imagemagick
+        # Run the generate-icons script
+        bash ./scripts/generate-icons.sh
+        
+    - name: Build app
+      run: |
+        wails build -clean -platform ${{ matrix.platform.name }}/amd64
+        
+    - name: Package app (macOS)
+      if: matrix.platform.os == 'macos-latest'
+      run: |
+        cd build/bin
+        # Create DMG
+        mkdir -p VizDisk-dmg
+        cp -r VizDisk.app VizDisk-dmg/
+        ln -s /Applications VizDisk-dmg/Applications
+        hdiutil create -volname "VizDisk" -srcfolder VizDisk-dmg -ov -format UDZO VizDisk.dmg
+        
+    - name: Package app (Linux)
+      if: matrix.platform.os == 'ubuntu-latest'
+      run: |
+        cd build/bin
+        tar -czf vizdisk-linux-amd64.tar.gz vizdisk
+        
+    - name: Upload macOS artifacts
+      if: matrix.platform.os == 'macos-latest'
+      uses: actions/upload-artifact@v4
+      with:
+        name: vizdisk-${{ matrix.platform.name }}-amd64
+        path: build/bin/VizDisk.dmg
+        
+    - name: Upload Linux artifacts
+      if: matrix.platform.os == 'ubuntu-latest'
+      uses: actions/upload-artifact@v4
+      with:
+        name: vizdisk-${{ matrix.platform.name }}-amd64
+        path: build/bin/vizdisk-linux-amd64.tar.gz
+        
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Download artifacts
+      uses: actions/download-artifact@v4
+      
+    - name: Get version
+      id: version
+      run: |
+        if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+          echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+        else
+          echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        fi
+        
+    - name: Create Release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{ steps.version.outputs.VERSION }}
+        name: VizDisk ${{ steps.version.outputs.VERSION }}
+        body: |
+          ## VizDisk ${{ steps.version.outputs.VERSION }}
+          
+          See [CHANGELOG.md](https://github.com/kiwamizamurai/vizdisk/blob/main/CHANGELOG.md) for detailed changes.
+          
+          ### Downloads
+          - **macOS**: VizDisk.dmg
+          - **Linux**: vizdisk-linux-amd64.tar.gz
+        files: |
+          vizdisk-darwin-amd64/VizDisk.dmg
+          vizdisk-linux-amd64/vizdisk-linux-amd64.tar.gz
+        draft: false
+        prerelease: false
+        token: ${{ secrets.GITHUB_TOKEN }}

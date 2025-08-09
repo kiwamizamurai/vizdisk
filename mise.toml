@@ -1,0 +1,69 @@
+[tools]
+go = "1.23.0"
+node = "23.11.1"
+golangci-lint = "1.63.4"
+gofumpt = "0.8.0"
+"npm:@biomejs/biome" = "2.1.3"
+
+# Main tasks
+[tasks.fmt]
+description = "Format all code"
+depends = ["go:fmt", "frontend:fmt"]
+
+[tasks.lint]
+description = "Lint all code"
+depends = ["go:lint", "frontend:lint"]
+
+[tasks.check]
+description = "Run all checks (lint + format check)"
+depends = ["go:check", "frontend:check"]
+
+[tasks.fix]
+description = "Fix all auto-fixable issues"
+depends = ["go:fix", "frontend:fix"]
+
+[tasks.test]
+description = "Run tests"
+run = "go test -v ./..."
+
+[tasks.build]
+description = "Build application"
+run = "wails build"
+
+# Go tasks
+[tasks."go:fmt"]
+description = "Format Go code"
+run = "gofumpt -w ."
+
+[tasks."go:lint"]
+description = "Lint Go code"
+run = "golangci-lint run ./..."
+
+[tasks."go:check"]
+description = "Check Go code formatting and linting"
+run = ["golangci-lint run ./...", "gofumpt -d ."]
+
+[tasks."go:fix"]
+description = "Fix Go code issues"
+run = ["golangci-lint run --fix ./...", "gofumpt -w ."]
+
+# Frontend tasks
+[tasks."frontend:fmt"]
+description = "Format frontend code"
+dir = "frontend"
+run = "npx biome format --write ."
+
+[tasks."frontend:lint"]
+description = "Lint frontend code"
+dir = "frontend"
+run = "npx biome lint ."
+
+[tasks."frontend:check"]
+description = "Check frontend code formatting and linting"
+dir = "frontend"
+run = "npx biome check ."
+
+[tasks."frontend:fix"]
+description = "Fix frontend code issues"
+dir = "frontend"
+run = "npx biome check --write ."

@@ -1,0 +1,50 @@
+run:
+  timeout: 5m
+  tests: true
+
+linters:
+  enable:
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - typecheck
+    - unused
+    - bodyclose
+    - dupl
+    - copyloopvar
+    - gochecknoinits
+    - goconst
+    - gocritic
+    - gocyclo
+    - gofmt
+    - goimports
+    - goprintffuncname
+    - gosec
+    - misspell
+    - nakedret
+    - noctx
+    - nolintlint
+    - prealloc
+    - rowserrcheck
+    - sqlclosecheck
+    - unconvert
+    - unparam
+    - whitespace
+
+linters-settings:
+  gocyclo:
+    min-complexity: 15
+  gofmt:
+    simplify: true
+  goimports:
+    local-prefixes: vizdisk
+  misspell:
+    locale: US
+  nakedret:
+    max-func-lines: 30
+
+issues:
+  max-issues-per-linter: 50
+  max-same-issues: 3

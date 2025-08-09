@@ -1,0 +1,23 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "VizDisk",
+  "outputfilename": "vizdisk",
+  "frontend:install": "npm install",
+  "frontend:build": "npm run build",
+  "frontend:dev:watcher": "npm run dev",
+  "frontend:dev:serverUrl": "auto",
+  "author": {
+    "name": "kiwamizamurai",
+    "email": "188808217+kiwamizamurai@users.noreply.github.com"
+  },
+  "info": {
+    "productName": "VizDisk",
+    "productVersion": "1.0.0",
+    "copyright": "© 2024 VizDisk. All rights reserved.",
+    "comments": "Beautiful disk usage analyzer with interactive visualization"
+  },
+  "nsisType": "multiple",
+  "obfuscated": false,
+  "garbleargs": "",
+  "version": "v2"
+}

@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup mise
+      uses: jdx/mise-action@v2
+      
+    - name: Build frontend for go:embed
+      working-directory: frontend
+      run: |
+        npm install
+        npm run build
+      
+    - name: Check code formatting and linting
+      run: mise run check
+      
+    - name: Run tests
+      run: mise run test
