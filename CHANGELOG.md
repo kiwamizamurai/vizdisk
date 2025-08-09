@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.0.0] - 2024-12-XX
+## [1.0.0] - 2025-08-09
 
 ### Added
 - Interactive TreeMap visualization for disk usage analysis
