@@ -1,19 +1,24 @@
 import {
+  BarChart3,
   ExternalLinkIcon,
   Github,
   HardDriveIcon,
   KeyboardIcon,
   MinusIcon,
+  Target,
   XIcon,
 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { useVisualizationSettings } from '@/hooks/useVisualizationSettings';
 import { calculateNodeStats } from '@/utils/fileOperations';
 import { formatDuration, formatFileSize } from '@/utils/formatters';
 import { GetAppInfo, OpenDirectoryDialog, ScanDirectory } from '../wailsjs/go/main/App';
 import type { models } from '../wailsjs/go/models';
 import { BrowserOpenURL, Quit, WindowMinimise } from '../wailsjs/runtime/runtime';
+import SunburstChart from './components/charts/SunburstChart';
 import TreeMapChart from './components/charts/TreeMapChart';
 import LoadingAnimation from './components/LoadingAnimation';
 
@@ -25,6 +30,7 @@ function App() {
   const [breadcrumbs, setBreadcrumbs] = useState<models.FileNode[]>([]);
   const [appInfo, setAppInfo] = useState<{ [key: string]: string }>({});
   const [showShortcuts, setShowShortcuts] = useState(false);
+  const { visualizationType, setVisualizationType } = useVisualizationSettings();
 
   const loadAppInfo = async () => {
     try {
@@ -172,37 +178,72 @@ function App() {
 
         {scanResult && currentViewNode && (
           <div className="flex-1 flex flex-col space-y-4 mt-4 overflow-hidden">
-            {breadcrumbs.length > 1 && (
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                {breadcrumbs.map((crumb, index) => (
-                  <React.Fragment key={crumb.id}>
-                    <button
-                      type="button"
-                      onClick={() => handleBreadcrumbClick(index)}
-                      className={`hover:text-foreground transition-colors ${
-                        index === breadcrumbs.length - 1
-                          ? 'text-foreground font-medium'
-                          : 'hover:text-foreground'
-                      }`}
-                    >
-                      {crumb.name}
-                    </button>
-                    {index < breadcrumbs.length - 1 && <span>/</span>}
-                  </React.Fragment>
-                ))}
+            <div className="flex items-center justify-between">
+              {breadcrumbs.length > 1 && (
+                <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                  {breadcrumbs.map((crumb, index) => (
+                    <React.Fragment key={crumb.id}>
+                      <button
+                        type="button"
+                        onClick={() => handleBreadcrumbClick(index)}
+                        className={`hover:text-foreground transition-colors ${
+                          index === breadcrumbs.length - 1
+                            ? 'text-foreground font-medium'
+                            : 'hover:text-foreground'
+                        }`}
+                      >
+                        {crumb.name}
+                      </button>
+                      {index < breadcrumbs.length - 1 && <span>/</span>}
+                    </React.Fragment>
+                  ))}
+                </div>
+              )}
+
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-muted-foreground">View:</span>
+                <ToggleGroup
+                  type="single"
+                  value={visualizationType}
+                  onValueChange={(value) => {
+                    if (value === 'treemap' || value === 'sunburst') {
+                      setVisualizationType(value);
+                    }
+                  }}
+                  variant="outline"
+                  size="sm"
+                >
+                  <ToggleGroupItem value="treemap" aria-label="TreeMap view">
+                    <BarChart3 className="h-4 w-4" />
+                  </ToggleGroupItem>
+                  <ToggleGroupItem value="sunburst" aria-label="Sunburst view">
+                    <Target className="h-4 w-4" />
+                  </ToggleGroupItem>
+                </ToggleGroup>
               </div>
-            )}
+            </div>
 
             <div className="grid grid-cols-3 gap-8 flex-1 min-h-0">
               <div className="col-span-2 h-full border border-border/20 rounded-lg p-4">
-                <TreeMapChart
-                  data={currentViewNode}
-                  onNodeClick={(node) => console.log('Node clicked:', node.name)}
-                  onNodeDoubleClick={handleNodeDoubleClick}
-                  onNodeDeleted={() => {
-                    handleScanDirectory(currentPath);
-                  }}
-                />
+                {visualizationType === 'treemap' ? (
+                  <TreeMapChart
+                    data={currentViewNode}
+                    onNodeClick={(node) => console.log('Node clicked:', node.name)}
+                    onNodeDoubleClick={handleNodeDoubleClick}
+                    onNodeDeleted={() => {
+                      handleScanDirectory(currentPath);
+                    }}
+                  />
+                ) : (
+                  <SunburstChart
+                    data={currentViewNode}
+                    onNodeClick={(node) => console.log('Node clicked:', node.name)}
+                    onNodeDoubleClick={handleNodeDoubleClick}
+                    onNodeDeleted={() => {
+                      handleScanDirectory(currentPath);
+                    }}
+                  />
+                )}
               </div>
 
               <div className="col-span-1 space-y-8">
@@ -265,7 +306,7 @@ function App() {
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-1">
               <span className="font-medium">{appInfo.name || 'VizDisk'}</span>
-              <span>v{appInfo.version || '1.0.0'}</span>
+              <span>v{appInfo.version || '0.0.0'}</span>
             </div>
             <div className="text-muted-foreground/60">{appInfo.license || 'MIT'} License</div>
           </div>
@@ -343,7 +384,7 @@ function App() {
             </div>
             <div className="mt-6 pt-4 border-t border-border">
               <p className="text-xs text-muted-foreground text-center">
-                {appInfo.name || 'VizDisk'} • Version {appInfo.version || '1.0.0'} •{' '}
+                {appInfo.name || 'VizDisk'} • Version {appInfo.version || '0.0.0'} •{' '}
                 {appInfo.license || 'MIT'} License
               </p>
             </div>

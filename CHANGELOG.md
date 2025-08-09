@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.0] - 2025-01-XX
+
+### Added
+- Interactive SunburstChart visualization for disk usage analysis
+- Toggle between TreeMap and Sunburst visualization modes with ToggleGroup component
+- Persistent visualization settings using localStorage via useVisualizationSettings hook
+- Enhanced user interaction with multiple chart viewing options
+
+### Improved
+- Enhanced TreeMapChart component with better font size calculations and gap adjustments
+- Improved rendering logic for better visual clarity
+
 ## [1.0.0] - 2025-08-09
 
 ### Added
