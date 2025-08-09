@@ -94,9 +94,25 @@ const TreeMapChart: React.FC<TreeMapChartProps> = ({
     if (!originalNode || typeof width !== 'number' || typeof height !== 'number') {
       return null;
     }
-    const isSmall = width < 40 || height < 20;
-    const fontSize = Math.max(isSmall ? 8 : 10, Math.min(width / 6, height / 3, 16));
-    const shouldShowText = width > 30 && height > 20;
+
+    // Add gaps between rectangles
+    const gap = 2;
+    const adjustedX = x + gap / 2;
+    const adjustedY = y + gap / 2;
+    const adjustedWidth = width - gap;
+    const adjustedHeight = height - gap;
+
+    // Skip rendering if too small after gaps
+    if (adjustedWidth <= 0 || adjustedHeight <= 0) {
+      return null;
+    }
+
+    const isSmall = adjustedWidth < 40 || adjustedHeight < 20;
+    const fontSize = Math.max(
+      isSmall ? 8 : 10,
+      Math.min(adjustedWidth / 6, adjustedHeight / 3, 16)
+    );
+    const shouldShowText = adjustedWidth > 30 && adjustedHeight > 20;
 
     const handleClick = (e: React.MouseEvent) => {
       e.preventDefault();
@@ -129,31 +145,22 @@ const TreeMapChart: React.FC<TreeMapChartProps> = ({
         onMouseLeave={handleMouseLeave}
       >
         <rect
-          x={x}
-          y={y}
-          width={width}
-          height={height}
+          x={adjustedX}
+          y={adjustedY}
+          width={adjustedWidth}
+          height={adjustedHeight}
           fill={getColor(size, maxSize)}
           stroke="hsl(220 13% 91%)"
           strokeWidth={isSmall ? 0.5 : 1}
+          rx={4}
+          ry={4}
         />
 
         {shouldShowText && (
           <>
-            {!isSmall && (
-              <rect
-                x={x + 2}
-                y={y + height / 2 - fontSize}
-                width={width - 4}
-                height={fontSize * 2.2}
-                fill="rgba(0,0,0,0.4)"
-                rx="4"
-              />
-            )}
-
             <text
-              x={x + width / 2}
-              y={y + height / 2 - (isSmall ? 0 : fontSize / 4)}
+              x={adjustedX + adjustedWidth / 2}
+              y={adjustedY + adjustedHeight / 2 - (isSmall ? 0 : fontSize / 4)}
               textAnchor="middle"
               fill="#ffffff"
               fontSize={fontSize}
@@ -163,15 +170,15 @@ const TreeMapChart: React.FC<TreeMapChartProps> = ({
                 fontFamily: 'system-ui, -apple-system, sans-serif',
               }}
             >
-              {name.length > Math.floor(width / (fontSize * 0.6))
-                ? `${name.substring(0, Math.floor(width / (fontSize * 0.6)) - 3)}...`
+              {name.length > Math.floor(adjustedWidth / (fontSize * 0.6))
+                ? `${name.substring(0, Math.floor(adjustedWidth / (fontSize * 0.6)) - 3)}...`
                 : name}
             </text>
 
-            {height > 60 && !isSmall && (
+            {adjustedHeight > 60 && !isSmall && (
               <text
-                x={x + width / 2}
-                y={y + height / 2 + fontSize / 2 + 4}
+                x={adjustedX + adjustedWidth / 2}
+                y={adjustedY + adjustedHeight / 2 + fontSize / 2 + 4}
                 textAnchor="middle"
                 fill="#ffffff"
                 fontSize={fontSize * 0.75}
