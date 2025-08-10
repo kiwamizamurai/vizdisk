@@ -24,21 +24,27 @@ VizDisk transforms file system data into interactive TreeMap and Sunburst chart 
 - **Multiple Visualization Options** - Choose between TreeMap rectangles and Sunburst radial charts
 - **Interactive Charts** - Visual representation of file and folder sizes with hover tooltips
 - **Effortless Navigation** - Double-click folders to drill down, breadcrumb navigation to go back
-- **Fast Scanning** - Efficient file system operations with real-time progress
-- **Cross-Platform** - Native desktop applications for macOS and Linux
-- **Modern UI** - Clean interface built with React and Tailwind CSS
-- **Persistent Settings** - Your visualization preferences are saved locally
+- **Context Menu Actions** - Right-click to delete files or open in Finder/File Explorer
 
 ## Installation
+
+### Homebrew (macOS & Linux)
+
+```bash
+# Add the tap
+brew tap kiwamizamurai/tap
+
+# Install VizDisk
+brew install vizdisk
+```
+
+### Manual Installation
 
 Download the latest release from [GitHub Releases](https://github.com/kiwamizamurai/vizdisk/releases).
 
 ## Contributing
 
-Contributions are welcome! See [CONTRIBUTING.md](../CONTRIBUTING.md) for development setup and guidelines.
-
-- Report bugs: [Create an issue](https://github.com/kiwamizamurai/vizdisk/issues)
-- Request features: [Create an issue](https://github.com/kiwamizamurai/vizdisk/issues)
+Contributions are welcome! See [CONTRIBUTING.md](./CONTRIBUTING.md) for development setup and guidelines.
 
 ## License
 
