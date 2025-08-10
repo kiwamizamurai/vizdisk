@@ -6,7 +6,6 @@
 
 **Cross-platform disk usage analyzer with interactive TreeMap and Sunburst visualizations**
 
-[![Release](https://github.com/kiwamizamurai/vizdisk/actions/workflows/release.yml/badge.svg)](https://github.com/kiwamizamurai/vizdisk/releases)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/kiwamizamurai/vizdisk)](https://github.com/kiwamizamurai/vizdisk/releases)
 [![GitHub all releases](https://img.shields.io/github/downloads/kiwamizamurai/vizdisk/total)](https://github.com/kiwamizamurai/vizdisk/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
