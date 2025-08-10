@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/icon.svg" alt="VizDisk Logo" width="128" height="128">
+<img src="build/icon.svg" alt="VizDisk Logo" width="128" height="128">
 
 # VizDisk
 
