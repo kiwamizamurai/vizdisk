@@ -49,9 +49,6 @@ Download the latest release from [GitHub Releases](https://github.com/kiwamizamu
 
 Contributions are welcome! See [CONTRIBUTING.md](./CONTRIBUTING.md) for development setup and guidelines.
 
-- Report bugs: [Create an issue](https://github.com/kiwamizamurai/vizdisk/issues)
-- Request features: [Create an issue](https://github.com/kiwamizamurai/vizdisk/issues)
-
 ## License
 
 MIT License - see [LICENSE](LICENSE) file.
