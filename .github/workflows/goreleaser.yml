@@ -16,35 +16,35 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          
+
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
           go-version: '1.23.0'
-          
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '23.11.1'
-          
+
       - name: Install system dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential pkg-config libgtk-3-dev libwebkit2gtk-4.0-dev librsvg2-dev imagemagick
-          
+
       - name: Install Wails
         run: go install github.com/wailsapp/wails/v2/cmd/wails@v2.10.2
-        
+
       - name: Install frontend dependencies
         working-directory: frontend
         run: |
           npm install
-          
+
       - name: Generate icons
         run: |
           chmod +x ./scripts/generate-icons.sh
           ./scripts/generate-icons.sh
-          
+
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v5
         with:
