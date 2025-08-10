@@ -24,10 +24,7 @@ VizDisk transforms file system data into interactive TreeMap and Sunburst chart 
 - **Multiple Visualization Options** - Choose between TreeMap rectangles and Sunburst radial charts
 - **Interactive Charts** - Visual representation of file and folder sizes with hover tooltips
 - **Effortless Navigation** - Double-click folders to drill down, breadcrumb navigation to go back
-- **Fast Scanning** - Efficient file system operations with real-time progress
-- **Cross-Platform** - Native desktop applications for macOS and Linux
-- **Modern UI** - Clean interface built with React and Tailwind CSS
-- **Persistent Settings** - Your visualization preferences are saved locally
+- **Context Menu Actions** - Right-click to delete files or open in Finder/File Explorer
 
 ## Installation
 
