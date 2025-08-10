@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.2.0] - 2025-08-10
+### Changed
+- Updated application icon design
+
 ## [1.1.0] - 2025-08-09
 
 ### Added

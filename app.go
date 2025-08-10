@@ -101,7 +101,7 @@ func (a *App) OpenDirectoryDialog() (string, error) {
 // GetAppInfo returns application information like version
 func (a *App) GetAppInfo() map[string]string {
 	return map[string]string{
-		"version":     "1.1.0",
+		"version":     "1.2.0",
 		"name":        "VizDisk",
 		"description": "Modern disk usage analyzer built with Wails and React",
 		"author":      "kiwamizamurai",
