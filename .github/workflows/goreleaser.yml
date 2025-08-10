@@ -36,8 +36,8 @@ jobs:
         run: go install github.com/wailsapp/wails/v2/cmd/wails@v2.10.2
         
       - name: Install frontend dependencies
+        working-directory: frontend
         run: |
-          cd frontend
           npm install
           
       - name: Generate icons
