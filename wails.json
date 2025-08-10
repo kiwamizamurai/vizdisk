@@ -7,13 +7,12 @@
   "frontend:dev:watcher": "npm run dev",
   "frontend:dev:serverUrl": "auto",
   "author": {
-    "name": "kiwamizamurai",
-    "email": "188808217+kiwamizamurai@users.noreply.github.com"
+    "name": "kiwamizamurai"
   },
   "info": {
     "productName": "VizDisk",
     "productVersion": "1.1.0",
-    "copyright": "© 2024 VizDisk. All rights reserved.",
+    "copyright": "© 2025 kiwamizamurai. All rights reserved.",
     "comments": "Beautiful disk usage analyzer with interactive visualization"
   },
   "nsisType": "multiple",
