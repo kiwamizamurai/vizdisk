@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.1.0] - 2025-01-XX
+## [1.1.0] - 2025-08-09
 
 ### Added
 - Interactive SunburstChart visualization for disk usage analysis
