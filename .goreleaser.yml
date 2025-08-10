@@ -1,0 +1,106 @@
+version: 2
+project_name: vizdisk
+
+before:
+  hooks:
+    - go mod tidy
+    - cd frontend && npm install
+
+builds:
+  - id: linux
+    binary: vizdisk
+    env:
+      - CGO_ENABLED=1
+    goos:
+      - linux
+    goarch:
+      - amd64
+    hooks:
+      post:
+        - wails build -clean -platform linux/amd64
+        - mkdir -p dist/vizdisk_linux_amd64_v1
+        - cp build/bin/vizdisk dist/vizdisk_linux_amd64_v1/
+
+  - id: darwin
+    binary: vizdisk
+    env:
+      - CGO_ENABLED=1
+    goos:
+      - darwin
+    goarch:
+      - amd64
+    hooks:
+      post:
+        - wails build -clean -platform darwin/amd64
+        - mkdir -p dist/vizdisk_darwin_amd64_v1
+        - cp -r build/bin/VizDisk.app dist/vizdisk_darwin_amd64_v1/
+
+archives:
+  - name_template: "{{ .ProjectName }}-{{ .Os }}-{{ .Arch }}"
+    files:
+      - README.md
+      - LICENSE
+      - CHANGELOG.md
+
+release:
+  github:
+    owner: kiwamizamurai
+    name: vizdisk
+  draft: false
+  prerelease: auto
+  name_template: "VizDisk {{.Tag}}"
+  header: |
+    ## VizDisk {{.Tag}}
+    
+    See [CHANGELOG.md](https://github.com/kiwamizamurai/vizdisk/blob/main/CHANGELOG.md) for detailed changes.
+  footer: |
+    ## Installation
+    
+    ### Homebrew (macOS & Linux)
+    ```bash
+    brew tap kiwamizamurai/vizdisk
+    brew install vizdisk
+    ```
+    
+    ### Manual Installation
+    Download the appropriate archive for your platform from the assets above.
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - Merge pull request
+      - Merge branch
+
+brews:
+  - repository:
+      owner: kiwamizamurai
+      name: homebrew-tap
+    homepage: "https://github.com/kiwamizamurai/vizdisk"
+    description: "Beautiful disk usage analyzer with interactive visualization"
+    license: "MIT"
+    dependencies:
+      - name: gtk+3
+        os: linux
+      - name: webkit2gtk
+        os: linux
+    install: |
+      if OS.mac?
+        prefix.install "VizDisk.app"
+        bin.write_exec_script "#{prefix}/VizDisk.app/Contents/MacOS/VizDisk"
+      else
+        bin.install "vizdisk"
+      end
+    caveats: |
+      VizDisk has been installed. On macOS, you can also launch it from Applications.
+    test: |
+      if OS.mac?
+        assert_predicate prefix/"VizDisk.app/Contents/MacOS/VizDisk", :exist?
+      else
+        assert_predicate bin/"vizdisk", :exist?
+      end
+
+checksum:
+  name_template: 'checksums.txt'

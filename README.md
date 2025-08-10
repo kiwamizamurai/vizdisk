@@ -31,11 +31,23 @@ VizDisk transforms file system data into interactive TreeMap and Sunburst chart 
 
 ## Installation
 
+### Homebrew (macOS & Linux)
+
+```bash
+# Add the tap
+brew tap kiwamizamurai/tap
+
+# Install VizDisk
+brew install vizdisk
+```
+
+### Manual Installation
+
 Download the latest release from [GitHub Releases](https://github.com/kiwamizamurai/vizdisk/releases).
 
 ## Contributing
 
-Contributions are welcome! See [CONTRIBUTING.md](../CONTRIBUTING.md) for development setup and guidelines.
+Contributions are welcome! See [CONTRIBUTING.md](../../CONTRIBUTING.md) for development setup and guidelines.
 
 - Report bugs: [Create an issue](https://github.com/kiwamizamurai/vizdisk/issues)
 - Request features: [Create an issue](https://github.com/kiwamizamurai/vizdisk/issues)
