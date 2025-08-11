@@ -4,8 +4,7 @@ project_name: vizdisk
 before:
   hooks:
     - go mod tidy
-    - cmd: npm install
-      dir: frontend
+    - sh -c "cd frontend && npm install"
 
 builds:
   - id: linux
