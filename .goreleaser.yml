@@ -5,6 +5,7 @@ before:
   hooks:
     - go mod tidy
     - sh -c "cd frontend && npm install"
+    - sh -c "cd frontend && npm run build"
 
 builds:
   - id: linux
